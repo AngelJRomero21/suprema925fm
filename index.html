@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
-  <!-- Metaetiquetas solicitadas -->
   <title>Suprema 92.5 FM En Vivo - Guanare, Portuguesa</title>
   <meta property="og:title" content="Suprema 92.5 FM En Vivo - Guanare, Portuguesa"/>
   <meta property="og:url" content="https://suprema925fm.com/" />
@@ -35,13 +34,11 @@
     .radio-player {
       width: 100%;
       height: 100%;
-      /* Imagen de fondo actualizada */
       background: url('https://i.imgur.com/OmLLUao.png') no-repeat center center;
       background-size: cover;
       position: relative;
     }
 
-    /* Capa oscura opcional para mejorar visibilidad de controles */
     .overlay {
         position: absolute;
         top: 0;
@@ -54,7 +51,6 @@
 
     .play-stop {
       position: absolute;
-      /* Ajustamos la posición para que no choque con el banner */
       bottom: 120px; 
       left: 50%;
       transform: translateX(-50%);
@@ -80,15 +76,15 @@
       color: #333;
     }
 
-    /* --- ESTILOS DEL BANNER (RESPONSIVE + FIJO) --- */
+    /* --- ESTILOS DEL BANNER (Usando iFrame) --- */
 
     .ad-banner-container {
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 100px; /* Altura visual del área del banner */
-        background-color: rgba(0, 0, 0, 0.85); /* Fondo oscuro */
+        height: 100px;
+        background-color: rgba(0, 0, 0, 0.9);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -96,7 +92,7 @@
         overflow: hidden;
     }
 
-    /* Wrapper que mantiene el tamaño original 728x90 internamente */
+    /* El Scaler asegura que el iFrame de 728px quepa en pantallas pequeñas */
     .ad-scaler {
         position: relative;
         width: 728px !important;
@@ -104,38 +100,33 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        transform-origin: center center; /* El punto de escala es el centro */
+        transform-origin: center center;
         background-color: transparent;
     }
 
-    /* Forzar estilos sobre el elemento insertado por Revive */
-    .ad-scaler ins {
-        display: block !important;
-        width: 728px !important;
-        height: 90px !important;
-        margin: 0 auto !important;
-        text-decoration: none;
+    /* Estilos para el iFrame */
+    .ad-scaler iframe {
+        border: 0;
+        overflow: hidden;
+        width: 728px;
+        height: 90px;
     }
 
-    /* --- MEDIA QUERIES PARA ESCALAR EL BANNER --- */
+    /* --- RESPONSIVIDAD (Escala Agresiva) --- */
     
-    /* Tablets */
     @media (max-width: 740px) {
         .ad-scaler { transform: scale(0.90); }
     }
 
-    /* Celulares Grandes */
     @media (max-width: 500px) {
         .ad-scaler { transform: scale(0.55); } 
-        .play-stop { bottom: 105px; } /* Ajuste fino del botón */
+        .play-stop { bottom: 105px; } 
     }
 
-    /* Celulares Estándar (aprox 360px - 400px) */
     @media (max-width: 400px) {
         .ad-scaler { transform: scale(0.48); } 
     }
 
-    /* Celulares Pequeños */
     @media (max-width: 340px) {
         .ad-scaler { transform: scale(0.42); }
     }
@@ -153,9 +144,9 @@
     
     <!-- Contenedor del Banner -->
     <div class="ad-banner-container">
-        <!-- El ID 'adContainer' será usado por JS para recargar el anuncio -->
-        <div id="adContainer" class="ad-scaler">
-             <!-- El anuncio se carga aquí vía JavaScript -->
+        <div class="ad-scaler">
+            <!-- El iFrame se genera inicialmente vacío, JS le pondrá la URL correcta -->
+            <iframe id="reviveAdFrame" src="" frameborder="0" scrolling="no" width="728" height="90" allowtransparency="true" allow="autoplay"></iframe>
         </div>
     </div>
 
@@ -186,38 +177,32 @@
       }
     });
 
-    // --- LÓGICA DE PUBLICIDAD (REFRESH CADA 30 SEGUNDOS) ---
+    // --- LÓGICA DE PUBLICIDAD IFRAME (REFRESH CADA 30s) ---
     
-    function loadBanner() {
-        const container = document.getElementById('adContainer');
-        
-        // 1. Limpiamos el contenedor actual (borra el anuncio viejo)
-        container.innerHTML = '';
+    function refreshIframe() {
+        const iframe = document.getElementById('reviveAdFrame');
+        if (!iframe) return;
 
-        // 2. Creamos la etiqueta <ins> dinámicamente
-        const insTag = document.createElement('ins');
-        insTag.setAttribute('data-revive-zoneid', '2'); // Tu nuevo Zone ID
-        insTag.setAttribute('data-revive-id', '3f5b5e135a8d08f01c6c2ca40f88449e');
+        // Generamos un número aleatorio real para evitar el caché
+        const randomNum = Math.floor(Math.random() * 99999999999);
         
-        // 3. Creamos la etiqueta <script> dinámicamente
-        const scriptTag = document.createElement('script');
-        scriptTag.async = true;
-        // Agregamos un timestamp aleatorio para evitar cache agresivo del navegador
-        scriptTag.src = '//ads.cromstudio.com.ve/www/delivery/asyncjs.php?t=' + new Date().getTime();
-
-        // 4. Inyectamos ambos en el contenedor
-        container.appendChild(insTag);
-        container.appendChild(scriptTag);
+        // Construimos la URL. 
+        // Nota: Mantenemos refresh=30 para el servidor, pero el 'cb' (cache buster)
+        // cambiará cada vez que JS ejecute esta función, forzando un anuncio nuevo.
+        const adUrl = `https://ads.cromstudio.com.ve/www/delivery/afr.php?refresh=30&zoneid=2&cb=${randomNum}`;
         
-        console.log("Banner actualizado: " + new Date().toLocaleTimeString());
+        // Actualizamos el src del iframe
+        iframe.src = adUrl;
+        
+        console.log("Anuncio refrescado: " + new Date().toLocaleTimeString());
     }
 
-    // Cargar el banner apenas inicie la página
-    loadBanner();
+    // 1. Cargar el anuncio inmediatamente al abrir la página
+    refreshIframe();
 
-    // Configurar el intervalo de 30 segundos (30000 milisegundos)
-    // Esto NO recarga la página, solo ejecuta la función loadBanner
-    setInterval(loadBanner, 30000);
+    // 2. Programar el refresco cada 30 segundos
+    // Esto es más seguro que el meta-refresh interno porque depende del navegador del usuario
+    setInterval(refreshIframe, 30000);
 
   </script>
 </body>
