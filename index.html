@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Suprema 92.5 FM En Vivo - Guanare, Portuguesa</title>
   
-  <!-- Meta Tags Originales -->
+  <!-- Metaetiquetas solicitadas -->
+  <title>Suprema 92.5 FM En Vivo - Guanare, Portuguesa</title>
   <meta property="og:title" content="Suprema 92.5 FM En Vivo - Guanare, Portuguesa"/>
   <meta property="og:url" content="https://suprema925fm.com/" />
   <meta property="og:image" content="https://i.imgur.com/sdGLSUU.jpeg" />
@@ -35,27 +35,27 @@
     .radio-player {
       width: 100%;
       height: 100%;
-      /* Nueva imagen de fondo solicitada */
+      /* Imagen de fondo actualizada */
       background: url('https://i.imgur.com/OmLLUao.png') no-repeat center center;
       background-size: cover;
       position: relative;
     }
 
-    /* Capa oscura opcional para mejorar visibilidad de botones/anuncios */
+    /* Capa oscura opcional para mejorar visibilidad de controles */
     .overlay {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0,0,0,0.1); 
         pointer-events: none;
     }
 
     .play-stop {
       position: absolute;
-      /* Subimos el botón para dejar espacio al banner de 90px + margen */
-      bottom: 120px;
+      /* Ajustamos la posición para que no choque con el banner */
+      bottom: 120px; 
       left: 50%;
       transform: translateX(-50%);
       width: 70px;
@@ -63,7 +63,7 @@
       border: none;
       border-radius: 50%;
       background-color: #ffffff;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -80,15 +80,15 @@
       color: #333;
     }
 
-    /* --- SISTEMA DE BANNER RESPONSIVE --- */
-    
+    /* --- ESTILOS DEL BANNER (RESPONSIVE + FIJO) --- */
+
     .ad-banner-container {
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
         height: 100px; /* Altura visual del área del banner */
-        background-color: rgba(0, 0, 0, 0.9);
+        background-color: rgba(0, 0, 0, 0.85); /* Fondo oscuro */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -96,53 +96,53 @@
         overflow: hidden;
     }
 
-    /* El escalador fuerza el tamaño real de 728x90 y lo encoge visualmente */
+    /* Wrapper que mantiene el tamaño original 728x90 internamente */
     .ad-scaler {
         position: relative;
         width: 728px !important;
         height: 90px !important;
-        display: flex; 
+        display: flex;
         justify-content: center;
         align-items: center;
-        transform-origin: center center;
-        transition: transform 0.3s ease;
+        transform-origin: center center; /* El punto de escala es el centro */
+        background-color: transparent;
     }
 
-    /* Aseguramos que el iFrame ocupe todo el escalador */
-    .ad-scaler iframe {
-        display: block;
-        border: none;
-        width: 728px;
-        height: 90px;
+    /* Forzar estilos sobre el elemento insertado por Revive */
+    .ad-scaler ins {
+        display: block !important;
+        width: 728px !important;
+        height: 90px !important;
+        margin: 0 auto !important;
+        text-decoration: none;
     }
 
-    /* --- MEDIA QUERIES PARA CELULARES --- */
-
-    /* Tablet Vertical */
+    /* --- MEDIA QUERIES PARA ESCALAR EL BANNER --- */
+    
+    /* Tablets */
     @media (max-width: 740px) {
-        .ad-scaler { transform: scale(0.95); }
+        .ad-scaler { transform: scale(0.90); }
     }
 
     /* Celulares Grandes */
-    @media (max-width: 550px) {
-        .ad-scaler { transform: scale(0.65); }
-    }
-
-    /* Celulares Estándar (iPhone / Android común) */
-    @media (max-width: 420px) {
-        .ad-scaler { transform: scale(0.50); } /* Encaja 728px en aprox 360px */
+    @media (max-width: 500px) {
+        .ad-scaler { transform: scale(0.55); } 
         .play-stop { bottom: 105px; } /* Ajuste fino del botón */
     }
 
+    /* Celulares Estándar (aprox 360px - 400px) */
+    @media (max-width: 400px) {
+        .ad-scaler { transform: scale(0.48); } 
+    }
+
     /* Celulares Pequeños */
-    @media (max-width: 360px) {
+    @media (max-width: 340px) {
         .ad-scaler { transform: scale(0.42); }
     }
 
   </style>
 </head>
 <body>
-
   <div class="radio-player">
     <div class="overlay"></div>
 
@@ -150,20 +150,19 @@
       <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
       <svg id="stopIcon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><rect x="6" y="6" width="12" height="12"></rect></svg>
     </button>
-
-    <!-- Área del Banner -->
+    
+    <!-- Contenedor del Banner -->
     <div class="ad-banner-container">
-        <div class="ad-scaler">
-            <!-- Crom Studio ADS Etiqueta iFrame -->
-            <!-- Nota: He añadido un pequeño script al final para reemplazar el número aleatorio automáticamente -->
-            <iframe id='ae871330' name='ae871330' src='' frameborder='0' scrolling='no' width='728' height='90' allowtransparency='true' allow='autoplay'></iframe>
+        <!-- El ID 'adContainer' será usado por JS para recargar el anuncio -->
+        <div id="adContainer" class="ad-scaler">
+             <!-- El anuncio se carga aquí vía JavaScript -->
         </div>
     </div>
 
   </div>
   
-  <audio id="radioStream" src="https://radio.cromstudio.com.ve/stream" preload="none"></audio>
-  
+  <audio id="radioStream" src="https://radio.cromstudio.com.ve/stream"></audio>
+
   <script>
     // --- LÓGICA DEL REPRODUCTOR ---
     const playStopButton = document.getElementById('playStopButton');
@@ -175,10 +174,10 @@
       if (radioStream.paused) {
         var playPromise = radioStream.play();
         if (playPromise !== undefined) {
-          playPromise.then(_ => {
-            playIcon.style.display = 'none';
-            stopIcon.style.display = 'block';
-          }).catch(error => console.error(error));
+            playPromise.then(_ => {
+                playIcon.style.display = 'none';
+                stopIcon.style.display = 'block';
+            }).catch(error => console.log(error));
         }
       } else {
         radioStream.pause();
@@ -187,27 +186,39 @@
       }
     });
 
-    // --- LÓGICA DEL ANUNCIO (Cache Buster) ---
-    // Esto asegura que el "INSERT_RANDOM_NUMBER_HERE" funcione correctamente
-    (function() {
-        var randomNum = Math.floor(Math.random() * 99999999999);
-        var iframe = document.getElementById('ae871330');
-        var src = "https://ads.cromstudio.com.ve/www/delivery/afr.php?refresh=30&zoneid=2&cb=" + randomNum;
+    // --- LÓGICA DE PUBLICIDAD (REFRESH CADA 30 SEGUNDOS) ---
+    
+    function loadBanner() {
+        const container = document.getElementById('adContainer');
         
-        // Creamos el contenido HTML dentro del iframe para incluir el pixel de tracking (img)
-        var iframeContent = `
-            <html>
-            <body style='margin:0;padding:0;'>
-                <a href='https://ads.cromstudio.com.ve/www/delivery/ck.php?n=a73db4a5&cb=${randomNum}' target='_blank'>
-                    <img src='https://ads.cromstudio.com.ve/www/delivery/avw.php?zoneid=2&cb=${randomNum}&n=a73db4a5' border='0' alt='' />
-                </a>
-            </body>
-            </html>
-        `;
+        // 1. Limpiamos el contenedor actual (borra el anuncio viejo)
+        container.innerHTML = '';
+
+        // 2. Creamos la etiqueta <ins> dinámicamente
+        const insTag = document.createElement('ins');
+        insTag.setAttribute('data-revive-zoneid', '2'); // Tu nuevo Zone ID
+        insTag.setAttribute('data-revive-id', '3f5b5e135a8d08f01c6c2ca40f88449e');
         
-        // Asignamos el src principal por si el adserver prefiere cargar via src
-        iframe.src = src;
-    })();
+        // 3. Creamos la etiqueta <script> dinámicamente
+        const scriptTag = document.createElement('script');
+        scriptTag.async = true;
+        // Agregamos un timestamp aleatorio para evitar cache agresivo del navegador
+        scriptTag.src = '//ads.cromstudio.com.ve/www/delivery/asyncjs.php?t=' + new Date().getTime();
+
+        // 4. Inyectamos ambos en el contenedor
+        container.appendChild(insTag);
+        container.appendChild(scriptTag);
+        
+        console.log("Banner actualizado: " + new Date().toLocaleTimeString());
+    }
+
+    // Cargar el banner apenas inicie la página
+    loadBanner();
+
+    // Configurar el intervalo de 30 segundos (30000 milisegundos)
+    // Esto NO recarga la página, solo ejecuta la función loadBanner
+    setInterval(loadBanner, 30000);
+
   </script>
 </body>
 </html>
