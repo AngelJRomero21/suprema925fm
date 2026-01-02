@@ -1,96 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Viewport ajustado para móviles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
   <title>Suprema 92.5 FM En Vivo - Guanare, Portuguesa</title>
+  
+  <!-- Tus Meta Etiquetas Originales -->
   <meta property="og:title" content="Suprema 92.5 FM En Vivo - Guanare, Portuguesa"/>
   <meta property="og:url" content="https://suprema925fm.com/" />
   <meta property="og:image" content="https://i.imgur.com/sdGLSUU.jpeg" />
   <meta property="og:site_name" content="Suprema 92.5 FM" />
 
-
   <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden; 
-}
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden; 
+      background-color: #000;
+    }
 
-body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #000;
-}
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-.radio-player {
-  width: 100%;
-  height: 100%;
-  background: url('https://i.imgur.com/OmLLUao.png') no-repeat center center;
-  background-size: cover;
-  position: relative;
-}
+    .radio-player {
+      width: 100%;
+      height: 100%;
+      /* Tu imagen de fondo original */
+      background: url('https://i.imgur.com/OmLLUao.png') no-repeat center center;
+      background-size: cover;
+      position: relative;
+    }
 
-.play-stop {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70px;
-  height: 70px;
-  border: none;
-  border-radius: 50%;
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
+    /* Capa opcional para mejorar lectura (opcional) */
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.1); 
+        pointer-events: none;
+    }
 
-.play-stop svg {
-  color: #333;
-}
+    .play-stop {
+      position: absolute;
+      /* Subimos el botón para dejar espacio al banner (120px) */
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 70px;
+      border: none;
+      border-radius: 50%;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 20;
+      transition: transform 0.2s ease;
+    }
 
+    .play-stop:hover {
+        transform: translateX(-50%) scale(1.05);
+    }
+    
+    .play-stop:active {
+        transform: translateX(-50%) scale(0.95);
+    }
+
+    .play-stop svg {
+      color: #333;
+    }
+
+    /* --- LÓGICA DEL BANNER RESPONSIVE --- */
+
+    /* 1. Contenedor fijo en la parte inferior */
+    .ad-banner-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px; /* Altura visual reservada */
+        background-color: rgba(0, 0, 0, 0.9); /* Fondo oscuro para resaltar */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 50;
+        overflow: hidden;
+    }
+
+    /* 2. El "Escalador": Fuerza el tamaño interno a 728x90 pase lo que pase */
+    .ad-scaler {
+        position: relative;
+        width: 728px !important;
+        height: 90px !important;
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        transform-origin: center center; /* Escala desde el centro */
+    }
+
+    /* Aseguramos que el elemento insertado por Revive respete el tamaño */
+    .ad-scaler ins {
+        display: block !important;
+        width: 728px !important;
+        height: 90px !important;
+        margin: 0 auto !important;
+    }
+
+    /* 3. Media Queries: Reducen el tamaño visualmente según la pantalla */
+
+    /* Tablets */
+    @media (max-width: 740px) {
+        .ad-scaler { transform: scale(0.95); }
+    }
+
+    /* Celulares Grandes */
+    @media (max-width: 500px) {
+        .ad-scaler { transform: scale(0.55); } 
+        .play-stop { bottom: 100px; } /* Ajuste fino del botón */
+    }
+
+    /* Celulares Estándar (iPhone/Android promedio) */
+    @media (max-width: 400px) {
+        .ad-scaler { transform: scale(0.50); } /* 50% de 728 es 364px (cabe perfecto) */
+    }
+
+    /* Celulares Pequeños */
+    @media (max-width: 360px) {
+        .ad-scaler { transform: scale(0.42); } 
+    }
 
   </style>
 </head>
 <body>
   <div class="radio-player">
-    <button id="playStopButton" class="play-stop">
+    <div class="overlay"></div>
+
+    <button id="playStopButton" class="play-stop" aria-label="Reproducir">
       <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
       <svg id="stopIcon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><rect x="6" y="6" width="12" height="12"></rect></svg>
     </button>
+
+    <!-- AQUÍ ESTÁ EL BANNER (Zona 2) -->
+    <div class="ad-banner-container">
+        <div class="ad-scaler">
+            <!-- Crom Studio ADS Etiqueta JS asincrónica -->
+            <ins data-revive-zoneid="2" data-revive-id="3f5b5e135a8d08f01c6c2ca40f88449e"></ins>
+            <script async src="//ads.cromstudio.com.ve/www/delivery/asyncjs.php"></script>
+        </div>
+    </div>
+
   </div>
-  <audio id="radioStream" src="https://radio.cromstudio.com.ve/stream"></audio>
+  
+  <audio id="radioStream" src="https://radio.cromstudio.com.ve/stream" preload="none"></audio>
+  
   <script>
+    const playStopButton = document.getElementById('playStopButton');
+    const radioStream = document.getElementById('radioStream');
+    const playIcon = document.getElementById('playIcon');
+    const stopIcon = document.getElementById('stopIcon');
 
-const playStopButton = document.getElementById('playStopButton');
-const radioStream = document.getElementById('radioStream');
-const playIcon = document.getElementById('playIcon');
-const stopIcon = document.getElementById('stopIcon');
-
-playStopButton.addEventListener('click', () => {
-  if (radioStream.paused) {
-    radioStream.play();
-    playIcon.style.display = 'none';
-    stopIcon.style.display = 'block';
-  } else {
-    radioStream.pause();
-    playIcon.style.display = 'block';
-    stopIcon.style.display = 'none';
-  }
-});
-
-
+    playStopButton.addEventListener('click', () => {
+      if (radioStream.paused) {
+        // Usamos promesa para evitar errores en Chrome/Safari móvil
+        var playPromise = radioStream.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.then(_ => {
+            playIcon.style.display = 'none';
+            stopIcon.style.display = 'block';
+          })
+          .catch(error => {
+            console.error("Autoplay prevenido:", error);
+          });
+        }
+      } else {
+        radioStream.pause();
+        playIcon.style.display = 'block';
+        stopIcon.style.display = 'none';
+      }
+    });
   </script>
 </body>
 </html>
+
+
